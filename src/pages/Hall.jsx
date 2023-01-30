@@ -3,6 +3,8 @@ import React from "react";
 export function Hall() {
     React.useEffect(() => {
         var c = document.getElementById("myCanvas");
+        var heightRatio = 0.5;
+        c.height = c.width * heightRatio;
         var ctx = c.getContext("2d");
         const coordinates = [
             [189, 299],
@@ -154,7 +156,7 @@ export function Hall() {
         ];
         for (let i = 0; i < coordinates.length; i++) {
             ctx.beginPath();
-            ctx.arc(coordinates[i][0], coordinates[i][1], 10, 0, 2 * Math.PI);
+            ctx.arc(coordinates[i][0]+10, coordinates[i][1]+10, 10, 0, 2 * Math.PI);
             ctx.fillStyle = '#E3E8EC';
             ctx.fill();
         }
@@ -162,12 +164,12 @@ export function Hall() {
 
     return (
         <div>
-            <h1>HTML5 Canvas + React.js</h1>
+            <h1>Salė</h1>
             <canvas
                 id="myCanvas"
-                width="1000"
+                width="700"
                 height="800"
-                style={{ border: "1px solid #d3d3d3" }}
+                style={{ width: "100%", border: "1px solid #d3d3d3" }}
             >
                 Your browser does not support the HTML canvas tag.
             </canvas>
