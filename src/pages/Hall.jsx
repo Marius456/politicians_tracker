@@ -150,6 +150,24 @@ const coordinates = [
 ];
 
 export function Hall() {
+    window.onload = function () {
+        for (let index = 0; index < coordinates.length; index++) {
+            var el = document.getElementById(index)
+            
+            el.addEventListener('click', function (e) {
+                e.currentTarget.setAttribute('fill', '#ff00cc');
+            });
+
+            el.addEventListener('mouseenter', function (e) {
+                e.currentTarget.setAttribute('fill', '#00FF33');
+            });
+
+            el.addEventListener('mouseleave', function (e) {
+                e.currentTarget.setAttribute('fill', '#E3E8EC');
+            });
+        }
+
+    }
     return (
         <div>
             <h1>Salė</h1>
@@ -160,13 +178,13 @@ export function Hall() {
                     width: "100%",
                     // border: "1px dashed #aaa"
                 }}>
-                <svg 
-                viewBox="0 0 700 350"
+                <svg
+                    viewBox="0 0 700 350"
                 >
                     {
                         coordinates.map((coord, index) =>
                         (
-                            <circle key={index} cx={coord[0] + 10} cy={coord[1] + 10} r="10" fill="#E3E8EC" />
+                            <circle id={index} key={index} cx={coord[0] + 10} cy={coord[1] + 10} r="10" fill="#E3E8EC" />
                         ))
                     }
                 </svg>
