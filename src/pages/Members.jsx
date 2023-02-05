@@ -4,6 +4,14 @@ import React, { useMemo } from 'react';
 import politicians_data from '../data/politicians.json';
 
 export function Members() {
+
+    for (var i = 0; i < politicians_data.length; i++){
+        if(Number.isInteger(politicians_data[i].birthday))
+            break
+        let a = Math.floor(Math.abs(new Date()-new Date(politicians_data[i].birthday)) / 31536000000)
+        politicians_data[i].birthday = a
+    }
+
     const columns = useMemo(() => [
         {
             accessorFn: (row) => `${row.name_surname}`, //accessorFn used to join multiple data into a single cell

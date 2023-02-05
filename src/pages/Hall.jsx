@@ -1,6 +1,8 @@
 import React from "react";
+import politicians_data from '../data/politicians.json';
 
 const coordinates = [
+
     [189, 299],
     [197, 278],
     [209, 259],
@@ -125,6 +127,7 @@ const coordinates = [
     [235, 22],
     [257, 17],
     [279, 13],
+    [302, 10],
     [352, 10],
     [375, 13],
     [397, 17],
@@ -153,17 +156,97 @@ export function Hall() {
     window.onload = function () {
         for (let index = 0; index < coordinates.length; index++) {
             var el = document.getElementById(index)
-            
+            let politician = politicians_data.find(item => item.sitting_position === index)
+
             el.addEventListener('click', function (e) {
-                e.currentTarget.setAttribute('fill', '#ff00cc');
+                window.location = politician.link;
             });
 
             el.addEventListener('mouseenter', function (e) {
-                e.currentTarget.setAttribute('fill', '#00FF33');
+                document.getElementById('id' + index).style.display = 'block';
+                if (politician) {
+                    e.currentTarget.setAttribute('fill', politician.faction_color);
+
+                    document.getElementById('id' + index).innerHTML = ""
+
+                    let name_div = document.createElement("div");
+                    name_div.id = "name_id_" + index;
+                    name_div.className = "name_class_" + index;
+                    name_div.style.backgroundColor = "lightgrey";
+                    name_div.style.width = "auto";
+                    name_div.style.height = "15%";
+                    name_div.style.fontSize = "0.7em";
+                    name_div.style.textAlign = "center";
+                    name_div.style.fontWeight = "bold";
+                    name_div.textContent = `${politician.name_surname}`
+                    document.getElementById('id' + index).appendChild(name_div);
+
+                    let image_div = document.createElement("div");
+                    image_div.id = "image_div_id_" + index;
+                    image_div.className = "image_div_class_" + index;
+                    image_div.style.backgroundColor = "grey";
+                    image_div.style.width = "30%";
+                    image_div.style.height = "85%";
+                    image_div.style.float = "left";
+                    document.getElementById('id' + index).appendChild(image_div);
+
+                    let image = document.createElement("img");
+                    image.id = "image_id_" + index;
+                    image.className = "image_class_" + index;
+                    image.style.minWidth = "0";
+                    image.style.width = "100%";
+                    image.style.height = "100%";
+                    image.setAttribute("src", politician.image_link);
+                    document.getElementById("image_div_id_" + index).appendChild(image);
+
+
+                    let bio_div = document.createElement("div");
+                    bio_div.id = "bio_id_" + index;
+                    bio_div.className = "bio_class_" + index;
+                    bio_div.style.width = "70%";
+                    bio_div.style.height = "100%";
+                    bio_div.style.float = "right";
+                    bio_div.style.fontSize = "0";
+                    document.getElementById('id' + index).appendChild(bio_div);
+
+                    const bio_fontSize = "7px"
+
+                    var faction_span = document.createElement('span');
+                    faction_span.style.fontSize = bio_fontSize;
+                    faction_span.innerHTML = '<strong>Frakcija: </strong>' + politician.faction + "<br>";
+                    var p3 = document.getElementById("bio_id_" + index);
+                    p3.appendChild(faction_span);
+
+                    var age_span = document.createElement('span');
+                    age_span.style.fontSize = bio_fontSize;
+                    age_span.innerHTML = '<strong>Amžius: </strong>' + Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000) + "<br>";
+                    p3.appendChild(age_span);
+
+                    var age_span = document.createElement('span');
+                    age_span.style.fontSize = bio_fontSize;
+                    let years = 0
+                    for (let index = 0; index < politician.tenures.length-1; index++) {
+                        years += politician.tenures[index+1] - politician.tenures[index];
+                        
+                    }
+                    age_span.innerHTML = '<strong>Seime: </strong>' + years + "<br>";
+                    p3.appendChild(age_span);
+
+                    var helpers_span = document.createElement('span');
+                    helpers_span.style.fontSize = bio_fontSize;
+                    helpers_span.innerHTML = '<strong>Patarėjai: </strong>' + politician.advisors + "<br>";
+                    p3.appendChild(helpers_span);
+                }
             });
 
             el.addEventListener('mouseleave', function (e) {
-                e.currentTarget.setAttribute('fill', '#E3E8EC');
+                if (politician) {
+                    e.currentTarget.setAttribute('fill', politician.faction_color);
+                }
+                else {
+                    e.currentTarget.setAttribute('fill', '#E3E8EC');
+                }
+                document.getElementById('id' + index).style.display = 'none';
             });
         }
 
@@ -176,15 +259,40 @@ export function Hall() {
                 width="700"
                 style={{
                     width: "100%",
-                    // border: "1px dashed #aaa"
                 }}>
                 <svg
                     viewBox="0 0 700 350"
+                    overflow="visible"
                 >
                     {
                         coordinates.map((coord, index) =>
                         (
-                            <circle id={index} key={index} cx={coord[0] + 10} cy={coord[1] + 10} r="10" fill="#E3E8EC" />
+                            <circle
+                                id={index}
+                                key={index}
+                                cx={coord[0] + 10}
+                                cy={coord[1] + 10}
+                                r="10"
+                                fill={politicians_data.find(item => item.sitting_position === index) ? politicians_data.find(item => item.sitting_position === index).faction_color : "#E3E8EC"}
+                            />
+                        ))
+                    }
+                    {
+                        coordinates.map((coord, index) =>
+                        (
+                            <foreignObject
+                                id={"id" + index}
+                                key={"key" + index}
+                                x={coord[0] + 10}
+                                y={coord[1] - 100}
+                                width="200"
+                                height="100"
+                                style={{
+                                    border: "2px solid green",
+                                    background: "white",
+                                    display: "none"
+                                }}>
+                            </foreignObject>
                         ))
                     }
                 </svg>
@@ -192,10 +300,3 @@ export function Hall() {
         </div>
     );
 }
-
-    //     for (let i = 0; i < coordinates.length; i++) {
-    //         ctx.beginPath();
-    //         ctx.arc(coordinates[i][0] + 10, coordinates[i][1] + 10, 10, 0, 2 * Math.PI);
-    //         ctx.fillStyle = '#E3E8EC';
-    //         ctx.fill();
-    //     }

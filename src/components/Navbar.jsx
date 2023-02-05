@@ -6,11 +6,13 @@ export function Navbar() {
     return (
         <NavbarBs sticky="top" className="bg-white shadow-sm mb-3">
             <Container>
-                <strong>Seimas</strong>
-                <Nav className="me-left">
+
+                <Nav className="me-right">
                     <Nav.Link to="/" as={NavLink}>
-                        Home
+                        <strong>Seimas</strong>
                     </Nav.Link>
+                </Nav>
+                <Nav className="me-left">
                     <Nav.Link to="/hall" as={NavLink}>
                         Salė
                     </Nav.Link>
