@@ -10,6 +10,13 @@ export function Members() {
             break
         let a = Math.floor(Math.abs(new Date()-new Date(politicians_data[i].birthday)) / 31536000000)
         politicians_data[i].birthday = a
+
+        
+        let years = 0
+        for (let index = 0; index < politicians_data[i].tenures.length-1; index++) {
+            years += politicians_data[i].tenures[index+1] - politicians_data[i].tenures[index];
+        }
+        Object.assign(politicians_data[i], {career_years: years});
     }
 
     const columns = useMemo(() => [
@@ -44,6 +51,10 @@ export function Members() {
         {
             accessorKey: 'birthday',
             header: 'Amžius',
+        },
+        {
+            accessorKey: 'career_years',
+            header: 'Metai seime',
         },
         {
             accessorKey: 'advisors',
