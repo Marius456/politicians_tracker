@@ -1,6 +1,6 @@
 import React from "react";
 import politicians_data from '../data/politicians.json';
-
+import { useEffect } from 'react'
 const coordinates = [
 
     [189, 299],
@@ -153,7 +153,7 @@ const coordinates = [
 ];
 
 export function Hall() {
-    window.onload = function () {
+    useEffect(() => {
         for (let index = 0; index < coordinates.length; index++) {
             var el = document.getElementById(index)
             let politician = politicians_data.find(item => item.sitting_position === index)
@@ -184,7 +184,6 @@ export function Hall() {
                     let image_div = document.createElement("div");
                     image_div.id = "image_div_id_" + index;
                     image_div.className = "image_div_class_" + index;
-                    image_div.style.backgroundColor = "grey";
                     image_div.style.width = "30%";
                     image_div.style.height = "85%";
                     image_div.style.float = "left";
@@ -225,9 +224,8 @@ export function Hall() {
                     var age_span = document.createElement('span');
                     age_span.style.fontSize = bio_fontSize;
                     let years = 0
-                    for (let index = 0; index < politician.tenures.length-1; index++) {
-                        years += politician.tenures[index+1] - politician.tenures[index];
-                        
+                    for (let index = 0; index < politician.tenures.length - 1; index++) {
+                        years += politician.tenures[index + 1] - politician.tenures[index];
                     }
                     age_span.innerHTML = '<strong>Seime: </strong>' + years + "<br>";
                     p3.appendChild(age_span);
@@ -250,7 +248,7 @@ export function Hall() {
             });
         }
 
-    }
+    }, [])
     return (
         <div>
             <h1>Salė</h1>
