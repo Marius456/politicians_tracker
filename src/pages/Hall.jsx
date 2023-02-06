@@ -281,8 +281,8 @@ export function Hall() {
                             <foreignObject
                                 id={"id" + index}
                                 key={"key" + index}
-                                x={coord[0] + 10}
-                                y={coord[1] - 100}
+                                x={coord[0] + 10 + 200 > 700? coord[0] + 10 - 200 : coord[0] + 10}
+                                y={coord[1] - 100 < 0? coord[1] + 20: coord[1] - 100}
                                 width="200"
                                 height="100"
                                 style={{
