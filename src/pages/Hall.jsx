@@ -1,6 +1,8 @@
 import React from "react";
 import politicians_data from '../data/politicians.json';
+import wealth_data from '../data/wealth.json';
 import { useEffect } from 'react'
+import { formatCurrency } from "../utilities/formatCurrency";
 const coordinates = [
 
     [189, 299],
@@ -234,6 +236,20 @@ export function Hall() {
                     helpers_span.style.fontSize = bio_fontSize;
                     helpers_span.innerHTML = '<strong>Patarėjai: </strong>' + politician.advisors + "<br>";
                     p3.appendChild(helpers_span);
+
+                    let wealth = 0
+                    const politicians_wealth_current_year = wealth_data[0].year_declared
+                    const pol_wealth = wealth_data.find(item => item.politican_id === politician.id &&
+                        item.year_declared === politicians_wealth_current_year)
+                    if (pol_wealth) {
+                        for (let index = 0; index < pol_wealth.numbers.length; index++) {
+                            wealth += pol_wealth.numbers[index];
+                        }
+                    }
+                    var wealth_span = document.createElement('span');
+                    wealth_span.style.fontSize = bio_fontSize;
+                    wealth_span.innerHTML = '<strong>Turtas: </strong>' + formatCurrency(wealth) + "<br>";
+                    p3.appendChild(wealth_span);
                 }
             });
 
@@ -281,8 +297,8 @@ export function Hall() {
                             <foreignObject
                                 id={"id" + index}
                                 key={"key" + index}
-                                x={coord[0] + 10 + 200 > 700? coord[0] + 10 - 200 : coord[0] + 10}
-                                y={coord[1] - 100 < 0? coord[1] + 20: coord[1] - 100}
+                                x={coord[0] + 10 + 200 > 700 ? coord[0] + 10 - 200 : coord[0] + 10}
+                                y={coord[1] - 100 < 0 ? coord[1] + 20 : coord[1] - 100}
                                 width="200"
                                 height="100"
                                 style={{
