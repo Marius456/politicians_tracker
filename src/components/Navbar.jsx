@@ -19,6 +19,9 @@ export function Navbar() {
                     <Nav.Link to="/members" as={NavLink}>
                         Nariai
                     </Nav.Link>
+                    <Nav.Link to="/about" as={NavLink}>
+                        Apie
+                    </Nav.Link>
                 </Nav>
             </Container>
         </NavbarBs>

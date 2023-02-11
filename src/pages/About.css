@@ -1,0 +1,23 @@
+.box{
+    box-sizing: border-box;
+    width: 100%;
+    box-shadow: 0 0 5px #ccc;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    /* padding: 5px 0; */
+}
+.box .title {
+    background-color: green;
+    width: 100%;
+    height: 30%;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+}
+.box .text {
+    background-color: lightgrey;
+    width: 100%;
+    min-height: 500px;
+    height: 50%;
+}

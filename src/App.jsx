@@ -3,6 +3,7 @@ import { Container } from "react-bootstrap"
 import { Navbar } from "./components/Navbar"
 import { Hall } from "./pages/Hall"
 import { Members } from "./pages/Members"
+import { About } from "./pages/About"
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <Route path="/" element={<Hall />} />
           <Route path="/hall" element={<Hall />} />
           <Route path="/members" element={<Members />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </Container>
     </>

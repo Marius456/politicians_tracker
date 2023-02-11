@@ -3,8 +3,10 @@ import politicians_data from '../data/politicians.json';
 import wealth_data from '../data/wealth.json';
 import { useEffect } from 'react'
 import { formatCurrency } from "../utilities/formatCurrency";
-const coordinates = [
 
+import './Hall.css';
+
+const coordinates = [
     [189, 299],
     [197, 278],
     [209, 259],
@@ -173,58 +175,38 @@ export function Hall() {
 
                     let name_div = document.createElement("div");
                     name_div.id = "name_id_" + index;
-                    name_div.className = "name_class_" + index;
-                    name_div.style.backgroundColor = "lightgrey";
-                    name_div.style.width = "auto";
-                    name_div.style.height = "15%";
-                    name_div.style.fontSize = "0.7em";
-                    name_div.style.textAlign = "center";
-                    name_div.style.fontWeight = "bold";
+                    name_div.className = "name_div";
                     name_div.textContent = `${politician.name_surname}`
                     document.getElementById('id' + index).appendChild(name_div);
 
                     let image_div = document.createElement("div");
                     image_div.id = "image_div_id_" + index;
-                    image_div.className = "image_div_class_" + index;
-                    image_div.style.width = "30%";
-                    image_div.style.height = "85%";
-                    image_div.style.float = "left";
+                    image_div.className = "image_div";
                     document.getElementById('id' + index).appendChild(image_div);
 
                     let image = document.createElement("img");
                     image.id = "image_id_" + index;
-                    image.className = "image_class_" + index;
-                    image.style.minWidth = "0";
-                    image.style.width = "100%";
-                    image.style.height = "100%";
+                    image.className = "image";
                     image.setAttribute("src", politician.image_link);
                     document.getElementById("image_div_id_" + index).appendChild(image);
 
 
                     let bio_div = document.createElement("div");
                     bio_div.id = "bio_id_" + index;
-                    bio_div.className = "bio_class_" + index;
-                    bio_div.style.width = "70%";
-                    bio_div.style.height = "100%";
-                    bio_div.style.float = "right";
-                    bio_div.style.fontSize = "0";
+                    bio_div.className = "bio";
                     document.getElementById('id' + index).appendChild(bio_div);
 
-                    const bio_fontSize = "7px"
 
                     var faction_span = document.createElement('span');
-                    faction_span.style.fontSize = bio_fontSize;
                     faction_span.innerHTML = '<strong>Frakcija: </strong>' + politician.faction + "<br>";
                     var p3 = document.getElementById("bio_id_" + index);
                     p3.appendChild(faction_span);
 
                     var age_span = document.createElement('span');
-                    age_span.style.fontSize = bio_fontSize;
                     age_span.innerHTML = '<strong>Amžius: </strong>' + Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000) + "<br>";
                     p3.appendChild(age_span);
 
                     var age_span = document.createElement('span');
-                    age_span.style.fontSize = bio_fontSize;
                     let years = 0
                     for (let index = 0; index < politician.tenures.length - 1; index++) {
                         years += politician.tenures[index + 1] - politician.tenures[index];
@@ -233,7 +215,6 @@ export function Hall() {
                     p3.appendChild(age_span);
 
                     var helpers_span = document.createElement('span');
-                    helpers_span.style.fontSize = bio_fontSize;
                     helpers_span.innerHTML = '<strong>Patarėjai: </strong>' + politician.advisors + "<br>";
                     p3.appendChild(helpers_span);
 
@@ -247,7 +228,6 @@ export function Hall() {
                         }
                     }
                     var wealth_span = document.createElement('span');
-                    wealth_span.style.fontSize = bio_fontSize;
                     wealth_span.innerHTML = '<strong>Turtas: </strong>' + formatCurrency(wealth) + "<br>";
                     p3.appendChild(wealth_span);
                 }
