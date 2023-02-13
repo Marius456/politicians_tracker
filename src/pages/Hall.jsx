@@ -163,7 +163,9 @@ export function Hall() {
             let politician = politicians_data.find(item => item.sitting_position === index)
 
             el.addEventListener('click', function (e) {
-                window.location = politician.link;
+                // window.location = politician.link;
+                window.location.href = "./#/info/" + politician.id;
+                window.location.reload(false);
             });
 
             el.addEventListener('mouseenter', function (e) {
