@@ -1,23 +1,39 @@
 .box{
     box-sizing: border-box;
     width: 100%;
+    height: auto;
     box-shadow: 0 0 5px #ccc;
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
-    /* padding: 5px 0; */
+    padding: 30px 30px;
 }
-.box .title {
-    background-color: green;
+.box .imagediv{
+    width: 40%;
+    height: 35em;
+}
+.imagediv .image{
     width: 100%;
-    height: 30%;
-    text-align: center;
-    font-weight: bold;
+    height: 100%;
+    object-fit: cover;
+}
+.box .details{
+    width: 50%;
+    padding: 5% 10%;
+}
+.details .title{
+    background-color: #B9C0CB;
+    width: 100%;
+    height: 100px;
+    padding: 0 10px;
     color: white;
+    display:flex;
+    align-items: center;
 }
-.box .text {
-    background-color: lightgrey;
-    width: 100%;
-    min-height: 500px;
-    height: 50%;
+.details .text {
+    width: 80%;
+    min-height: 100px;
+    height: auto;
+    float: right;
+    padding: 10px 0;
 }
