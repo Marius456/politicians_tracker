@@ -6,28 +6,28 @@ import politicians_wealth_data from '../data/wealth.json';
 
 export function Members() {
 
-    for (var i = 0; i < politicians_data.length; i++){
-        if(Number.isInteger(politicians_data[i].birthday))
+    for (var i = 0; i < politicians_data.length; i++) {
+        if (Number.isInteger(politicians_data[i].birthday))
             break
-        let a = Math.floor(Math.abs(new Date()-new Date(politicians_data[i].birthday)) / 31536000000)
+        let a = Math.floor(Math.abs(new Date() - new Date(politicians_data[i].birthday)) / 31536000000)
         politicians_data[i].birthday = a
 
         let wealth = 0
         const politicians_wealth_current_year = politicians_wealth_data[0].year_declared
-        const pol_wealth = politicians_wealth_data.find(item => item.politican_id === politicians_data[i].id && 
-                                                        item.year_declared === politicians_wealth_current_year)
-        if(pol_wealth){
-            for(let index = 0; index < pol_wealth.numbers.length; index++){
+        const pol_wealth = politicians_wealth_data.find(item => item.politican_id === politicians_data[i].id &&
+            item.year_declared === politicians_wealth_current_year)
+        if (pol_wealth) {
+            for (let index = 0; index < pol_wealth.numbers.length; index++) {
                 wealth += pol_wealth.numbers[index];
             }
         }
 
         let years = 0
-        for (let index = 0; index < politicians_data[i].tenures.length-1; index++) {
-            years += politicians_data[i].tenures[index+1] - politicians_data[i].tenures[index];
+        for (let index = 0; index < politicians_data[i].tenures.length - 1; index++) {
+            years += politicians_data[i].tenures[index + 1] - politicians_data[i].tenures[index];
         }
-        Object.assign(politicians_data[i], {career_years: years});
-        Object.assign(politicians_data[i], {politician_wealth: wealth});
+        Object.assign(politicians_data[i], { career_years: years });
+        Object.assign(politicians_data[i], { politician_wealth: wealth });
     }
 
     const columns = useMemo(() => [
@@ -74,6 +74,23 @@ export function Members() {
         {
             accessorKey: 'politician_wealth',
             header: 'Turtas',
+            Cell: ({ cell }) => (
+                <Box
+                    component="span"
+                    sx={(theme) => ({
+                        borderRadius: '0.25rem',
+                        maxWidth: '9ch',
+                        p: '0.25rem',
+                    })}
+                >
+                    {cell.getValue()?.toLocaleString?.('pl-PL', {
+                        style: 'currency',
+                        currency: 'EUR',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                    })}
+                </Box>
+            ),
         },
     ],
         [],
@@ -87,6 +104,8 @@ export function Members() {
             enableColumnActions={false}
             enableTopToolbar={false}
             enableGlobalFilter={false}
+            enableColumnDragging={false}
+            enablePagination={false}
         />
     );
 }

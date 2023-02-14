@@ -160,10 +160,9 @@ export function Hall() {
     useEffect(() => {
         for (let index = 0; index < coordinates.length; index++) {
             var el = document.getElementById(index)
-            let politician = politicians_data.find(item => item.sitting_position === index)
+            const politician = politicians_data.find(item => item.sitting_position === index)
 
             el.addEventListener('click', function (e) {
-                // window.location = politician.link;
                 window.location.href = "./#/info/" + politician.id;
                 window.location.reload(false);
             });
@@ -205,7 +204,7 @@ export function Hall() {
                     p3.appendChild(faction_span);
 
                     var age_span = document.createElement('span');
-                    age_span.innerHTML = '<strong>Amžius: </strong>' + Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000) + "<br>";
+                    age_span.innerHTML = '<strong>Amžius: </strong>' + Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000) + " metai<br>";
                     p3.appendChild(age_span);
 
                     var age_span = document.createElement('span');
@@ -213,7 +212,7 @@ export function Hall() {
                     for (let index = 0; index < politician.tenures.length - 1; index++) {
                         years += politician.tenures[index + 1] - politician.tenures[index];
                     }
-                    age_span.innerHTML = '<strong>Seime: </strong>' + years + "<br>";
+                    age_span.innerHTML = '<strong>Seime: </strong>' + years + " metai<br>";
                     p3.appendChild(age_span);
 
                     var helpers_span = document.createElement('span');
@@ -288,6 +287,7 @@ export function Hall() {
                                     background: "white",
                                     display: "none"
                                 }}>
+                                    Duomenų nėra.
                             </foreignObject>
                         ))
                     }
