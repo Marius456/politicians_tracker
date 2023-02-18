@@ -5,9 +5,11 @@ import { useParams } from "react-router-dom";
 import politicians_data from "../data/politicians.json";
 import MaterialReactTable from 'material-react-table';
 import { formatCurrency } from "../utilities/formatCurrency";
-import { AreaChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Area } from 'recharts';
+import { CartesianGrid, XAxis, YAxis, Tooltip, Line, ResponsiveContainer, LineChart } from 'recharts';
 
-import wealth_data from '../data/wealth.json';
+import politician_wealth_data from '../data/wealth.json';
+import politician_spouse_data from '../data/spouses.json';
+import politician_spouse_wealth_data from '../data/spouses_wealth.json';
 import business_trips_data from '../data/business_trips.json';
 import advisors_data from '../data/advisors.json';
 
@@ -19,21 +21,47 @@ export function Member_Info() {
     const politician = politicians_data.find(item => item.id === Number(id))
     const politician_advisors = advisors_data.filter(item => item.politican_id === politician.id)
     const politician_business_trips = business_trips_data.filter(item => item.politican_id === politician.id)
-    const politician_wealth = wealth_data.filter(item => item.politican_id === politician.id)
+    const politician_wealth_list = politician_wealth_data.filter(item => item.politican_id === politician.id)
+    const spouse = politician_spouse_data.find(item => item.politican_id === politician.id)
     let years = 0
     for (let index = 0; index < politician.tenures.length - 1; index++) {
         years += politician.tenures[index + 1] - politician.tenures[index];
     }
     let politician_wealth_graph = []
-    const last_declared_year = wealth_data[0].year_declared
-    for (let i = 0; i < politician_wealth.length; i++) {
-        let wealth = 0
-        for (let index = 0; index < politician_wealth[i].numbers.length; index++) {
-            wealth += politician_wealth[i].numbers[index];
+
+    for (let i = 0; i < politician_wealth_list.length; i++) {
+        let politician_wealth = 0
+        let politician_spouse_wealth = 0
+        if (spouse) {
+
+            const spouse_wealth = politician_spouse_wealth_data.find(item =>
+                item.year_declared === politician_wealth_list[i].year_declared &&
+                item.politician_spouse_id === spouse.id)
+            if (spouse_wealth) {
+                for (let index = 0; index < spouse_wealth.numbers.length; index++) {
+                    politician_spouse_wealth += spouse_wealth.numbers[index];
+                }
+            }
         }
-        politician_wealth_graph.unshift({ "year_declared": politician_wealth[i].year_declared, "wealth": wealth })
+        for (let index = 0; index < politician_wealth_list[i].numbers.length; index++) {
+            politician_wealth += politician_wealth_list[i].numbers[index];
+        }
+        if (politician_wealth_list[i].year_declared < 2015) {
+            politician_wealth = politician_wealth * 0.28962;
+            politician_spouse_wealth = politician_spouse_wealth * 0.28962;
+        }
+        politician_wealth_graph.unshift({
+            "year_declared": politician_wealth_list[i].year_declared,
+            "politician_wealth": politician_wealth,
+            "spouse_wealth": politician_spouse_wealth,
+            "all_wealth": politician_wealth + politician_spouse_wealth
+        })
     }
 
+    const max = Math.max(...politician_wealth_graph.map((o) => o.all_wealth))
+    const maxYaxis = max * 1.1
+    let min = Math.min(...politician_wealth_graph.map((o) => o.all_wealth))
+    const minYaxis = min * 0.9
 
     const columns_advisors = useMemo(() => [
         {
@@ -60,6 +88,24 @@ export function Member_Info() {
         [],
     );
 
+    const CustomTooltip = ({ active, payload, label }) => {
+        console.log(payload)
+        if (active && payload && payload.length) {
+            return (
+                <div style={{ display: "inline-block", padding: 10 }}>
+                    <p>{`${label} metai`}</p>
+                    <div>
+                        {payload.map((pld) => (
+                            <div style={{ color: pld.stroke }}>
+                                {formatCurrency(pld.value)}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
+        return null
+    }
     return (
         <>
             <h1>{politician.name_surname}</h1>
@@ -72,7 +118,7 @@ export function Member_Info() {
                     <span><strong>Amžius: </strong> {Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000)} metai </span><br />
                     <span><strong>Seime: </strong> {years} metai </span><br />
                     <span><strong>Patarėjai: </strong> {politician.advisors} </span><br />
-                    <span><strong>Turtas: </strong> {formatCurrency(politician_wealth_graph.at(-1).wealth)} </span><br />
+                    <span><strong>Turtas: </strong> {formatCurrency(politician_wealth_graph.at(-1).all_wealth)} </span><br />
                 </div>
                 <div className="tabs">
                     <ButtonGroup color="primary"
@@ -106,13 +152,24 @@ export function Member_Info() {
                     </ButtonGroup>
                     <div id='wealth_report' className='wealth_report'>
                         <h3>Turto apžvalga</h3>
-                        <AreaChart width={400} height={400} data={politician_wealth_graph}>
-                            <Area type="monotone" dataKey="wealth" stroke="#8884d8" fill='#8884d8' />
-                            <CartesianGrid stroke="#ccc" />
-                            <XAxis dataKey="year_declared" />
-                            <YAxis domain={['datamin', 'dataMax+1000']}/>
-                            <Tooltip />
-                        </AreaChart>
+                        <ResponsiveContainer width="100%" height={500}>
+                            <LineChart data={politician_wealth_graph}                        >
+                                <Line type="monotone" dataKey="all_wealth" stroke="#8884d8" />
+                                <CartesianGrid stroke="#ccc" />
+                                <XAxis dataKey="year_declared" />
+                                <YAxis
+                                    width={150}
+                                    domain={[minYaxis, maxYaxis]}
+                                    tickFormatter={(value) =>
+                                        formatCurrency(value)
+                                    }
+                                />
+                                <Tooltip
+                                    content={<CustomTooltip />}
+                                    wrapperStyle={{ backgroundColor: "white", borderStyle: "ridge", paddingLeft: "10px", paddingRight: "10px" }}
+                                />
+                            </LineChart>
+                        </ResponsiveContainer>
                     </div>
                     <div id='advisors' className='advisors'>
                         <h3>Patarėjai</h3>
