@@ -1,10 +1,10 @@
 import React from "react";
 import politicians_data from '../data/politicians.json';
-import wealth_data from '../data/wealth.json';
 import { useEffect } from 'react'
-import { formatCurrency } from "../utilities/formatCurrency";
+import ReactDOM from 'react-dom/client';
 
 import './Hall.css';
+import { MemberInfo } from "../components/MemberInfo";
 
 const coordinates = [
     [189, 299],
@@ -197,40 +197,8 @@ export function Hall() {
                     bio_div.className = "bio";
                     document.getElementById('id' + index).appendChild(bio_div);
 
-
-                    var faction_span = document.createElement('span');
-                    faction_span.innerHTML = '<strong>Frakcija: </strong>' + politician.faction + "<br>";
-                    var p3 = document.getElementById("bio_id_" + index);
-                    p3.appendChild(faction_span);
-
-                    var age_span = document.createElement('span');
-                    age_span.innerHTML = '<strong>Amžius: </strong>' + Math.floor(Math.abs(new Date() - new Date(politician.birthday)) / 31536000000) + " metai<br>";
-                    p3.appendChild(age_span);
-
-                    var age_span = document.createElement('span');
-                    let years = 0
-                    for (let index = 0; index < politician.tenures.length - 1; index++) {
-                        years += politician.tenures[index + 1] - politician.tenures[index];
-                    }
-                    age_span.innerHTML = '<strong>Seime: </strong>' + years + " metai<br>";
-                    p3.appendChild(age_span);
-
-                    var helpers_span = document.createElement('span');
-                    helpers_span.innerHTML = '<strong>Patarėjai: </strong>' + politician.advisors + "<br>";
-                    p3.appendChild(helpers_span);
-
-                    let wealth = 0
-                    const politicians_wealth_current_year = wealth_data[0].year_declared
-                    const pol_wealth = wealth_data.find(item => item.politican_id === politician.id &&
-                        item.year_declared === politicians_wealth_current_year)
-                    if (pol_wealth) {
-                        for (let index = 0; index < pol_wealth.numbers.length; index++) {
-                            wealth += pol_wealth.numbers[index];
-                        }
-                    }
-                    var wealth_span = document.createElement('span');
-                    wealth_span.innerHTML = '<strong>Turtas: </strong>' + formatCurrency(wealth) + "<br>";
-                    p3.appendChild(wealth_span);
+                    const root = ReactDOM.createRoot(document.getElementById("bio_id_" + index));
+                    root.render(<MemberInfo politician={politician} />);
                 }
             });
 
@@ -246,9 +214,40 @@ export function Hall() {
         }
 
     }, [])
+
+    var groupBy = function (data, key) {
+        return data.reduce(function (acc, cur) {
+            (acc[cur[key]] = acc[cur[key]] || []).push(cur);
+            return acc;
+        }, {});
+    };
+    const factions = groupBy(politicians_data, "faction")
+    let factionsNames = []
+    Object.keys(factions).reduce((accum, currKey) => 
+        factionsNames.push({"name": currKey? currKey : "Neturi frakcijos", "color": factions[currKey][0].faction_color})
+    , '')
+
+    const [isShowBody, setIsSHowBody] = React.useState(false);
+
+    const onClickHandler = () => {
+      setIsSHowBody(isShowBody => !isShowBody);
+    }
     return (
         <div>
             <h1>Salė</h1>
+            <div onClick={onClickHandler} style={{cursor: 'pointer'}}>
+                <h3>Legenda</h3>
+                { isShowBody &&<div>
+                    {
+                        factionsNames.map((faction, index) =>
+                        (
+                            <>
+                            <div><div class='colorbox' style={{backgroundColor: faction.color}}></div> {faction.name}</div>
+                            <br/>
+                            </>
+                        ))}
+                </div>}
+            </div>
             <div
                 height="800"
                 width="700"
@@ -287,7 +286,7 @@ export function Hall() {
                                     background: "white",
                                     display: "none"
                                 }}>
-                                    Duomenų nėra.
+                                Duomenų nėra.
                             </foreignObject>
                         ))
                     }

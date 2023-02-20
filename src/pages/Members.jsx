@@ -108,30 +108,30 @@ export function Members() {
                 </Box>
             ),
         },
-        {
-            accessorKey: 'politician_spouse_wealth',
-            header: 'Sutuoktynio',
-            Cell: ({ cell }) => (
-                <Box
-                    component="span"
-                    sx={(theme) => ({
-                        borderRadius: '0.25rem',
-                        maxWidth: '9ch',
-                        p: '0.25rem',
-                    })}
-                >
-                    {cell.getValue()?.toLocaleString?.('pl-PL', {
-                        style: 'currency',
-                        currency: 'EUR',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                    })}
-                </Box>
-            ),
-        },
+        // {
+        //     accessorKey: 'politician_spouse_wealth',
+        //     header: 'Sutuoktynio',
+        //     Cell: ({ cell }) => (
+        //         <Box
+        //             component="span"
+        //             sx={(theme) => ({
+        //                 borderRadius: '0.25rem',
+        //                 maxWidth: '9ch',
+        //                 p: '0.25rem',
+        //             })}
+        //         >
+        //             {cell.getValue()?.toLocaleString?.('pl-PL', {
+        //                 style: 'currency',
+        //                 currency: 'EUR',
+        //                 minimumFractionDigits: 0,
+        //                 maximumFractionDigits: 0,
+        //             })}
+        //         </Box>
+        //     ),
+        // },
         {
             accessorKey: 'politician_all_wealth',
-            header: 'Visas',
+            header: 'Šeimos turtas',
             Cell: ({ cell }) => (
                 <Box
                     component="span"
